@@ -1,4 +1,13 @@
-//this is the server. Yay!
+import 'dotenv/config'
+import { connection } from './db/connection.js'
+
+const init = () => {
+    //run inquirer
+
+}
+
+init()
+
 
 // GIVEN a command-line application that accepts user input
 // WHEN I start the application
