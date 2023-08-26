@@ -22,19 +22,29 @@ const init = () => {
     .catch((err) => {
         console.log(err)
     })
-    // connection.connect(function(err) {
-    //     if (err) throw err;
-    //     connection.query("SELECT * FROM employee", function (err, result, fields) {
-    //       if (err) throw err;
-    //       console.log(result);
-    //     });
-    // });
+}
+
+//will be moved to the helpers folder eventually
+const viewDepartments = () => {
+    connection.connect(function(err) {
+        if (err) throw err;
+        connection.query("SELECT * FROM department", function (err, result, fields) {
+          if (err) throw err;
+          console.log(result);
+        });
+    });
 }
 
 const performAction = (option) => {
-    console.log(option, "Action completed!")
-    init()
+    switch(option){
+        case ('View all Departments'):
+            viewDepartments()
+            break; 
+    }  
+    
+    setTimeout(init, 2000)
 }
+
 
 init()
 
