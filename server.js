@@ -1,12 +1,60 @@
 import 'dotenv/config'
 import { connection } from './db/connection.js'
+import inquirer from 'inquirer'
 
 const init = () => {
     //run inquirer
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'option',
+            message: 'What would you like to do?',
+            choices: ['View all Departments', 'Exit']
+        }
+    ])
+    .then((answer) => {
+        if (answer.option !== 'Exit'){
+            performAction(answer.option)
+        } else {
+            console.log('Goodbye!')
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    // connection.connect(function(err) {
+    //     if (err) throw err;
+    //     connection.query("SELECT * FROM employee", function (err, result, fields) {
+    //       if (err) throw err;
+    //       console.log(result);
+    //     });
+    // });
+}
 
+const performAction = (option) => {
+    console.log(option, "Action completed!")
+    init()
 }
 
 init()
+
+//view all deprtment
+//view all toles
+//view all employees
+//add dept
+//add role
+//add employee
+//update employee role
+//exit:)
+
+// optional:
+//Update managers
+//view employees by mgr
+//view employees by dept
+//delete any of the aove
+//view budget
+
+// THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
 
 
 // GIVEN a command-line application that accepts user input
