@@ -7,5 +7,7 @@ export const viewDepartments = () => {
           if (err) throw err;
           console.log(result);
         });
+
+        setTimeout(init, 2000)
     });
 }

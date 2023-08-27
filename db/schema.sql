@@ -18,7 +18,7 @@ CREATE TABLE role (
     department_id INT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (department_id) REFERENCES department(id)
-);
+); 
 
 -- initialization for the employee table
 CREATE TABLE employee (

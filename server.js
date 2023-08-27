@@ -2,7 +2,8 @@ import 'dotenv/config'
 import { options } from './helpers/index.js'
 import inquirer from 'inquirer'
 
-const {viewDepartments, viewRoles, viewEmployees} = options
+const {viewDepartments, viewRoles, viewEmployees, 
+       addDepartment, addRole, addEmployee, updateEmployeeRole} = options
 
 const init = () => {
     //run inquirer
@@ -11,7 +12,10 @@ const init = () => {
             type: 'list',
             name: 'option',
             message: 'What would you like to do?',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Exit']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 
+                      'Add Department', 'Add Role', 'Add Employee',
+                      'Update Employee Role', 'Exit'],
+            default: 'Update Employee Role'          
         }
     ])
     .then((answer) => {
@@ -19,6 +23,7 @@ const init = () => {
             performAction(answer.option)
         } else {
             console.log('Goodbye!')
+            process.exit()
         }
     })
     .catch((err) => {
@@ -36,10 +41,19 @@ const performAction = (option) => {
             break; 
         case ('View all Employees'):
             viewEmployees()
-            break;         
+            break; 
+        case ('Add Department'):
+            addDepartment()  
+            break;    
+        case ('Add Role'):
+            addRole()  
+            break; 
+        case ('Add Employee'):
+            addEmployee()
+            break;  
+        case ('Update Employee Role'):  
+            updateEmployeeRole()
     }  
-    
-    setTimeout(init, 2000)
 }
 
 

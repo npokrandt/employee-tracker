@@ -7,5 +7,7 @@ export const viewEmployees = () => {
           if (err) throw err;
           console.log(result);
         });
+
+        setTimeout(init, 2000)
     });
 }
