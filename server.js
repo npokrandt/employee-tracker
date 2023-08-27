@@ -1,6 +1,8 @@
 import 'dotenv/config'
-import { connection } from './db/connection.js'
+import { options } from './helpers/index.js'
 import inquirer from 'inquirer'
+
+const {viewDepartments, viewRoles, viewEmployees} = options
 
 const init = () => {
     //run inquirer
@@ -9,7 +11,7 @@ const init = () => {
             type: 'list',
             name: 'option',
             message: 'What would you like to do?',
-            choices: ['View all Departments', 'Exit']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Exit']
         }
     ])
     .then((answer) => {
@@ -24,22 +26,17 @@ const init = () => {
     })
 }
 
-//will be moved to the helpers folder eventually
-const viewDepartments = () => {
-    connection.connect(function(err) {
-        if (err) throw err;
-        connection.query("SELECT * FROM department", function (err, result, fields) {
-          if (err) throw err;
-          console.log(result);
-        });
-    });
-}
-
 const performAction = (option) => {
     switch(option){
         case ('View all Departments'):
             viewDepartments()
             break; 
+        case ('View all Roles'):
+            viewRoles()
+            break; 
+        case ('View all Employees'):
+            viewEmployees()
+            break;         
     }  
     
     setTimeout(init, 2000)
