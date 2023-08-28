@@ -3,14 +3,30 @@
 //fairly straightforward, just the dept name. Might not enforce any canstraints
 
 import { connection } from '../db/connection.js'
+import inquirer from 'inquirer'
+import {init} from '../server.js'
 
 export const addDepartment = () => {
-    console.log('department added!')
-    // connection.connect(function(err) {
-    //     if (err) throw err;
-    //     connection.query("SELECT * FROM department", function (err, result, fields) {
-    //       if (err) throw err;
-    //       console.log(result);
-    //     });
-    // });
+
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'deptName',
+            message: 'What department are you adding?'
+        }
+    ]).then((answer) => {
+        connection.connect(function(err) {
+        if (err) throw err;
+        connection.query(`INSERT INTO department (name) 
+                        VALUES 
+                        (?)`, [answer.deptName],
+            function (err, result, fields) {
+              if (err) throw err;
+              console.log('Department Added!');
+
+              setTimeout(init, 2000)
+            });
+        });
+    })
+
 }

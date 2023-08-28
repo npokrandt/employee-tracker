@@ -1,4 +1,5 @@
 import { connection } from '../db/connection.js'
+import {init} from '../server.js'
 
 export const viewRoles = () => {
     connection.connect(function(err) {

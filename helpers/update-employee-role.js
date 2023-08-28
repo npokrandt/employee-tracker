@@ -1,6 +1,7 @@
 //update employee
 import { connection } from '../db/connection.js'
 import inquirer from 'inquirer'
+import {init} from '../server.js'
 
 export const updateEmployeeRole = () => {
 

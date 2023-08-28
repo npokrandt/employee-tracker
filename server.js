@@ -5,7 +5,7 @@ import inquirer from 'inquirer'
 const {viewDepartments, viewRoles, viewEmployees, 
        addDepartment, addRole, addEmployee, updateEmployeeRole} = options
 
-const init = () => {
+export const init = () => {
     //run inquirer
     inquirer.prompt([
         {
@@ -55,7 +55,6 @@ const performAction = (option) => {
             updateEmployeeRole()
     }  
 }
-
 
 init()
 
