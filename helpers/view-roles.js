@@ -6,7 +6,7 @@ export const viewRoles = () => {
         if (err) throw err;
         connection.query("SELECT * FROM role", function (err, result, fields) {
           if (err) throw err;
-          console.log(result);
+          console.table(result);
 
           setTimeout(init, 2000)
         });

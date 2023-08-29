@@ -6,7 +6,7 @@ export const viewEmployees = () => {
         if (err) throw err;
         connection.query("SELECT * FROM employee", function (err, result, fields) {
           if (err) throw err;
-          console.log(result);
+          console.table(result);
         });
 
         setTimeout(init, 2000)

@@ -14,8 +14,7 @@ export const init = () => {
             message: 'What would you like to do?',
             choices: ['View all Departments', 'View all Roles', 'View all Employees', 
                       'Add Department', 'Add Role', 'Add Employee',
-                      'Update Employee Role', 'Exit'],
-            default: 'Update Employee Role'          
+                      'Update Employee Role', 'Exit']        
         }
     ])
     .then((answer) => {
