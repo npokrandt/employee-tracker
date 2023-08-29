@@ -19,7 +19,7 @@ Finally, if the option to update the employee's role is selected, the user will 
 ## Link
 
 As this is a CLI program, it is not deployed anywhere. Instead, watch a video demo here:
-https://www.loom.com/share/f25617f913b14470b43a989aa31e659e?sid=3de8dd82-30c2-4ae1-b0a8-2e7aa0c5a7cb
+https://www.loom.com/share/020e3a6d0744429081b84672f5344e7b?sid=268e9791-f392-47d1-8c2f-aef4289b29fe
 
 ## Credits
 
