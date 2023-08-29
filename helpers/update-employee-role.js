@@ -12,11 +12,16 @@ export const updateEmployeeRole = () => {
 const getEmployees = () => {
     connection.connect(function(err) {
         if (err) throw err;
-        connection.query("SELECT employee.first_name, employee.last_name FROM employee", function (err, result, fields) {
+        connection.query("SELECT employee.id, employee.first_name, employee.last_name FROM employee", function (err, result, fields) {
             let employees = []
             if (err) throw err;
             for (const employee in result){ 
-                employees.push(result[employee].first_name + ' ' + result[employee].last_name)
+                let employeeObj = {
+                    id: result[employee].id,
+                    firstName: result[employee].first_name,
+                    lastName: result[employee].last_name
+                }
+                employees.push(employeeObj)
             }
 
             getRoles(employees)
@@ -28,11 +33,15 @@ const getRoles = employees => {
     //get the role names to use in enquirer
     connection.connect(function(err) {
         if (err) throw err;
-        connection.query("SELECT role.title FROM role", function (err, result, fields) {
+        connection.query("SELECT role.id, role.title FROM role", function (err, result, fields) {
             let roles = []
             if (err) throw err;
             for (const role in result){ 
-                roles.push(result[role].title)
+                let roleObj = {
+                    id: result[role].id,
+                    title: result[role].title
+                }
+                roles.push(roleObj)
             }
 
             inquirerPrompt(employees, roles)
@@ -40,7 +49,21 @@ const getRoles = employees => {
     });
 }
 
-const inquirerPrompt = (employees, roles) => {
+const inquirerPrompt = (employeeObjs, roleObjs) => {
+
+    let employees = []
+    let roles = []
+
+    for (const employeeObj in employeeObjs){
+        const fullName = employeeObjs[employeeObj].firstName + " " + employeeObjs[employeeObj].lastName
+        employees.push(fullName)
+        //fill the new array with just the full names
+    }
+
+    for (const roleObj in roleObjs){
+        roles.push(roleObjs[roleObj].title)
+        //fill the new array with just the role titles
+    }
     inquirer.prompt([
         //ask which employee to update
         {
@@ -58,7 +81,29 @@ const inquirerPrompt = (employees, roles) => {
             default: 'Update Employee Role'   
         }
     ]).then((answer) => {
-        console.log(answer)
+        // console.log(answer)
+        let roleId;
+        let employeeId;
+        for (const roleObj in roleObjs){
+            if (answer.role === roleObjs[roleObj].title){
+                roleId = roleObjs[roleObj].id
+            }
+        }
+
+        const names = answer.employee.split(' ')
+        for (const employeeObj in employeeObjs){
+            if (names[0] === employeeObjs[employeeObj].firstName && names[1] === employeeObjs[employeeObj].lastName){
+                employeeId = employeeObjs[employeeObj].id
+            }
+        }
+
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query("UPDATE employee SET employee.role_id = ? WHERE employee.id = ?",[roleId, employeeId], function (err, result, fields) {
+                if (err) throw err;
+                console.log(result)   
+            });
+        });
 
         setTimeout(init, 2000)
     })
