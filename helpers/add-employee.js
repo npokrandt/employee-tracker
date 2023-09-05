@@ -5,6 +5,34 @@ import {init} from '../server.js'
 
 //employee has first and last name, role which is an id, and possibly a manager id
 export const addEmployee = () => {
+
+    connection.connect(function(err) {
+        if (err) throw err;
+        connection.query("SELECT role.id, role.title FROM role", function (err, result, fields) {
+            let roles = []
+            if (err) throw err;
+            for (const role in result){ 
+                let roleObj = {
+                    id: result[role].id,
+                    title: result[role].title
+                }
+                roles.push(roleObj)
+            }
+
+            inquirerAddEmployee(roles)
+        });
+    });
+    
+}
+
+const inquirerAddEmployee = roleObjs => {
+    let roles = []
+
+    for (const roleObj in roleObjs){
+        roles.push(roleObjs[roleObj].title)
+        //fill the new array with just the role titles
+    }
+
     inquirer.prompt([
         {
             type: 'input',
@@ -17,9 +45,11 @@ export const addEmployee = () => {
             message: 'What is the employee\'s last name?'
         },
         {
-            type: 'number',
+            //change this to a list of all available roles
+            type: 'list',
             name: 'employeeRole',
-            message: 'What role willl this employee fill?'
+            message: 'What role will this employee fill?',
+            choices: roles
         },
         {
             type: 'number',
@@ -28,11 +58,18 @@ export const addEmployee = () => {
             default: 'NULL'
         }
     ]).then((answers) => {
+        let employeeRoleId;
+        for (const roleObj in roleObjs){
+            if (answers.employeeRole === roleObjs[roleObj].title){
+                employeeRoleId = roleObjs[roleObj].id
+            }
+        }
+
         connection.connect(function(err) {
         if (err) throw err;
         connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) 
                         VALUES 
-                        (?, ?, ?, ?)`, [answers.employeeFirstName, answers.employeeLastName, answers.employeeRole, answers.employeeManager],
+                        (?, ?, ?, ?)`, [answers.employeeFirstName, answers.employeeLastName, employeeRoleId, answers.employeeManager],
             function (err, result, fields) {
               if (err) throw err;
               console.log('Employee Added!');
