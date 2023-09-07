@@ -26,14 +26,43 @@ export const addEmployee = () => {
                 roles.push(roleObj)
             }
 
-            inquirerAddEmployee(roles)
+            addManagers(roles)
         });
     });
     
 }
 
-const inquirerAddEmployee = roleObjs => {
+const addManagers = roles => {
+    connection.connect(function(err) {
+        if (err) throw err;
+        connection.query("SELECT employee.id, employee.first_name, employee.last_name FROM employee WHERE employee.is_manager = true", function (err, result, fields) {
+            let managers = []
+            if (err) throw err;
+            for (const manager in result){ 
+                let managerObj = {
+                    id: result[manager].id,
+                    firstName: result[manager].first_name,
+                    lastName: result[manager].last_name
+                }
+                managers.push(managerObj)
+            }
+     
+            inquirerAddEmployee(roles, managers)
+        });
+    });
+}
+
+const inquirerAddEmployee = (roleObjs, managerObjs) => {
+
+    let managers = []
     let roles = []
+
+    for (const managerObj in managerObjs){
+        const fullName = managerObjs[managerObj].firstName + " " + managerObjs[managerObj].lastName
+        managers.push(fullName)
+        //fill the new array with just the full names
+    }
+    managers.push('N/A')
 
     for (const roleObj in roleObjs){
         roles.push(roleObjs[roleObj].title)
@@ -59,10 +88,10 @@ const inquirerAddEmployee = roleObjs => {
             choices: roles
         },
         {
-            type: 'number',
+            type: 'list',
             name: 'employeeManager',
             message: 'Who is this employee\'s manager?',
-            default: 0
+            choices: managers
         },
         {
             type: 'confirm',
@@ -83,7 +112,7 @@ const inquirerAddEmployee = roleObjs => {
         connection.connect(function(err) {
             if (err) throw err;
             
-            if (managerId === 0){
+            if (managerId === 'N/A'){
                 connection.query(`INSERT INTO employee (first_name, last_name, role_id, is_manager) 
                                 VALUES 
                                 (?, ?, ?, ?)`, [answers.employeeFirstName, answers.employeeLastName, employeeRoleId,  answers.employeeIsManager],
@@ -96,9 +125,15 @@ const inquirerAddEmployee = roleObjs => {
 
             } else {
 
+                const names = answers.employeeManager.split(' ')
+                for (const managerObj in managerObjs){
+                    if (names[0] === managerObjs[managerObj].firstName && names[1] === managerObjs[managerObj].lastName){
+                        managerId = managerObjs[managerObj].id
+                    }
+                }
                 connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id, is_manager) 
                                 VALUES 
-                                (?, ?, ?, ?, ?)`, [answers.employeeFirstName, answers.employeeLastName, employeeRoleId, answers.employeeManager, answers.employeeIsManager],
+                                (?, ?, ?, ?, ?)`, [answers.employeeFirstName, answers.employeeLastName, employeeRoleId, managerId, answers.employeeIsManager],
                     function (err, result, fields) {
                       if (err) throw err;
                       console.log('Employee Added!');
